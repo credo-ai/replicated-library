@@ -73,8 +73,9 @@
   {{- else if and (hasKey $containerValues "ports") $containerValues.ports }}
     {{- $firstPort := first $containerValues.ports }}
     {{- if and (hasKey $firstPort "containerPort") $firstPort.containerPort }}
-      {{- $_ := set $.Values.defaults.probes.livenessProbe "tcpSocket" (dict "port" (first $containerValues.ports).containerPort) }}
-      {{- with $.Values.defaults.probes.livenessProbe }}
+      {{- $defaultLivenessProbe := mustDeepCopy $.Values.defaults.probes.livenessProbe }}
+      {{- $_ := set $defaultLivenessProbe "tcpSocket" (dict "port" (first $containerValues.ports).containerPort) }}
+      {{- with $defaultLivenessProbe }}
   livenessProbe:
       {{- toYaml . | nindent 4 }}
       {{- end }}
@@ -88,8 +89,9 @@
   {{- else if and (hasKey $containerValues "ports") $containerValues.ports }}
     {{- $firstPort := first $containerValues.ports }}
     {{- if and (hasKey $firstPort "containerPort") $firstPort.containerPort }}
-      {{- $_ := set $.Values.defaults.probes.readinessProbe "tcpSocket" (dict "port" (first $containerValues.ports).containerPort) }}
-      {{- with $.Values.defaults.probes.readinessProbe }}
+      {{- $defaultReadinessProbe := mustDeepCopy $.Values.defaults.probes.readinessProbe }}
+      {{- $_ := set $defaultReadinessProbe "tcpSocket" (dict "port" (first $containerValues.ports).containerPort) }}
+      {{- with $defaultReadinessProbe }}
   readinessProbe:
       {{- toYaml . | nindent 4 }}
       {{- end }}
